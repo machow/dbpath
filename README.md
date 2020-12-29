@@ -6,6 +6,12 @@
 
 dbpath is an R library for creating database connections via a single string (url).
 
+## Install
+
+```R
+remotes::install_github("machow/dbpath")
+```
+
 ## Examples
 
 ```R
