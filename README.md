@@ -120,7 +120,7 @@ This means that you can use the same string across languages!
 sql_url = "postgresql://user:password@localhost:port/dbname"
 ```
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>R</th>
@@ -136,7 +136,7 @@ DBI::dbconnection(sql_url)
     </td>
     <!-- python example -->
     <td><pre><code>import sqlalchemy
-engine = sqlalchemy.create_engine(sql_url)
+sqlalchemy.create_engine(sql_url)
 </code></pre>
     </td>
   </tr>
