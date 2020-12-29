@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  db_postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: some_password
+    ports:
+      - 5441:5432
+
+  db_mysql:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: some_db
+      MYSQL_ROOT_PASSWORD: some_password
+    ports:
+      - 5442:3306
+

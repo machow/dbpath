@@ -1,0 +1,4 @@
+^dbpath\.Rproj$
+^\.Rproj\.user$
+docker-compose.yml
+^LICENSE\.md$
