@@ -17,10 +17,10 @@ Imports:
     DBI,
     methods
 Suggests: 
-    testthat
+    testthat,
+    RPostgres,
+    RMariaDB
 Collate: 
-    'db_connect.R'
     'dbpath.R'
-    'dbconnect.R'
     'drivers.R'
     'zzz.R'

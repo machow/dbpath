@@ -13,6 +13,7 @@ simple_config <- function() {
 
 import_from <- function(pkg, func_name) {
   # standard eval for pkg::func_name
+  requireNamespace(pkg)
   function() get(func_name, loadNamespace(pkg))
 }
 
