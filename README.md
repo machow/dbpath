@@ -130,7 +130,6 @@ sql_url = "postgresql://user:password@localhost:port/dbname"
   <tr>
     <!-- r example -->
     <td><pre><code>library(dbpath)
-
 DBI::dbconnection(sql_url)
 </code></pre>
     </td>
