@@ -45,9 +45,14 @@ mysql_url <- "mysql+RMariaDB://root:some_password@localhost"
 ```
 
 In this case, we're connecting to the mysql dialect, using R's MariaDB package as a driver.
-This means that `DBI::dbConnect(mysql_url)` is equiavlent to...
+
+The code below shows how it translates to making the connection manually.
 
 ```R
+# dbpath
+DBI::dbConnect(mysql_url)
+
+# manual
 DBI::dbConnect(
   RMariaDB::MariaDB(),
   user = "root",
