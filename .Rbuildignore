@@ -1,4 +1,6 @@
 ^dbpath\.Rproj$
 ^\.Rproj\.user$
-docker-compose.yml
+^docker-compose.yml
 ^LICENSE\.md$
+^\.github$
+^README.md
