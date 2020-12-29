@@ -110,3 +110,35 @@ Here are the current driver defaults:
  postgresql       mysql     mariadb 
 "RPostgres"  "RMariaDB"  "RMariaDB" 
 ```
+
+## Interoperability with Python
+
+`dbpath's` approach is based on python's SQLAlchemy library.
+This means that you can use the same string across languages!
+
+```R
+sql_url = "postgresql://user:password@localhost:port/dbname"
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>R</th>
+      <th>python</th>
+    </tr>
+  </thead>
+  <tr>
+    <!-- r example -->
+    <td><pre><code>library(dbpath)
+
+DBI::dbconnection(sql_url)
+</code></pre>
+    </td>
+    <!-- python example -->
+    <td><pre><code>import sqlalchemy
+engine = sqlalchemy.create_engine(sql_url)
+</code></pre>
+    </td>
+  </tr>
+</table>
+
