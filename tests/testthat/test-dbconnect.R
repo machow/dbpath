@@ -4,7 +4,8 @@
 
 DB_STRINGS <- c(
   postgres = "postgresql+RPostgres://postgres:some_password@localhost:5441/postgres",
-  mysql = "mysql+RMariaDB://root:some_password@127.0.0.1:5442/some_db"
+  mysql = "mysql+RMariaDB://root:some_password@127.0.0.1:5442/some_db",
+  mysql_no_driver = "mysql://root:some_password@127.0.0.1:5442/some_db"
 )
 
 for (ii in 1:length(DB_STRINGS)) {

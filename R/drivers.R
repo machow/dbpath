@@ -27,7 +27,7 @@ get_driver_name <- function(path) {
 
   if (is.na(driver)) {
     dialect <- get_backend_name(name)
-    driver <- driver_defaults[dialect]
+    driver <- driver_defaults$get(dialect)
   }
 
   driver
