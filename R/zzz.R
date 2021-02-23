@@ -6,7 +6,8 @@ driver_registry <- simple_config()
 driver_registry$set(
   RPostgres = import_from("RPostgres", "Postgres"),
   RMariaDB = import_from("RMariaDB", "MariaDB"),
-  psycopg2 = import_from("RPostgres", "Postgres")
+  psycopg2 = import_from("RPostgres", "Postgres"),
+  odbc = import_from("odbc", "odbc")
 )
 
 # maps dialects to drivers ----
@@ -17,6 +18,7 @@ dialect_defaults <- simple_config()
 dialect_defaults$set(
   postgresql = "RPostgres",
   mysql = "RMariaDB",
-  mariadb = "RMariaDB"
+  mariadb = "RMariaDB",
+  snowflake = "odbc"
 )
 

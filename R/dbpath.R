@@ -67,9 +67,7 @@ tbl.dbpath <- function(x, ...) {
 #' @export
 #' @importFrom DBI dbConnect
 setMethod("dbConnect", "dbpath", function(drv) {
-  driver <- get_driver(get_driver_name(drv))
-
-  params <- dbpath_params(driver(), drv)
+  params <- dbpath_params(drv)
 
   do.call(DBI::dbConnect, params)
 })

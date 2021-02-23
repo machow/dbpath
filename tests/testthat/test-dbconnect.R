@@ -27,4 +27,7 @@ test_that("dbpath_params works with odbc", {
   expect_equal(params$warehouse, "mywarehouse")
 
   expect_is(params$drv, "OdbcDriver")
+
+  params2 <- dbpath_params(url)
+  expect_equal(params, params2)
 })

@@ -71,6 +71,13 @@ dbpath_params.OdbcDriver <- function(driver, dbpath) {
 }
 
 #' @export
+dbpath_params.dbpath <- function(path) {
+  driver <- get_driver(get_driver_name(path))
+
+  dbpath_params(driver(), path)
+}
+
+#' @export
 dbpath_params.default <- function(driver, dbpath) {
   # works both with Postgres::PqDriver, RMariaDB::MariaDB
   # could make explicit implementations for them, and set default
