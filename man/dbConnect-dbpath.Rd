@@ -6,7 +6,7 @@
 \alias{dbConnect,dbpath-method}
 \title{dbConnect method for dbpath}
 \usage{
-\S4method{dbConnect}{dbpath}(drv, ...)
+\S4method{dbConnect}{dbpath}(drv)
 }
 \arguments{
 \item{drv}{a driver instance}

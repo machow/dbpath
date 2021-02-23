@@ -21,11 +21,26 @@ dbpath <- function(url) {
   starts <- attr(res, "capture.start")
   lens <- attr(res, "capture.length")
 
-  parsed_url <- substring(url, starts, starts + lens - 1)
+  parsed_url <- as.list(substring(url, starts, starts + lens - 1))
   names(parsed_url) <-colnames(starts)
 
-  if (parsed_url["ipv6host"] != "") {
-    stop("TODO: ip v6 format not currently supported.")
+  if (parsed_url[["ipv4host"]] != "") {
+    host <- parsed_url[["ipv4host"]]
+  } else {
+    host <- parsed_url[["ipv6host"]]
+  }
+
+  # drop the ip specific columns, to just have single host entry
+  parsed_url <- parsed_url[!names(parsed_url) %in% c("ipv6host", "ipv4host")]
+  parsed_url$host <- host
+
+  if (parsed_url[["database"]] != "") {
+    tokens <- strsplit(parsed_url[["database"]], "?", fixed = TRUE)[[1]]
+    parsed_url[["database"]] <- tokens[1]
+
+    if (length(tokens) > 1) {
+      parsed_url[["params"]] <- .rfc_1738_parse_query(tokens[2])
+    }
   }
 
   structure(parsed_url, class = "dbpath")
@@ -51,19 +66,15 @@ tbl.dbpath <- function(x, ...) {
 #' @param ... extra arguments
 #' @export
 #' @importFrom DBI dbConnect
-setMethod("dbConnect", "dbpath", function(drv, ...) {
-  driver <- get_driver(get_driver_name(drv["name"]))
-  DBI::dbConnect(
-    driver(),
-    user = drv[["username"]],
-    password = drv[["password"]],
-    host = drv[["ipv4host"]],
-    port = drv[["port"]],
-    dbname = drv[["database"]],
-    ...
-  )
+setMethod("dbConnect", "dbpath", function(drv) {
+  driver <- get_driver(get_driver_name(drv))
+
+  params <- dbpath_params(driver(), drv)
+
+  do.call(DBI::dbConnect, params)
 })
 
+#' print a dbpath object
 #' @method print dbpath
 #' @param x an item to print
 #' @param hide_password replace password with '****'
@@ -73,11 +84,11 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
   # name, username, password, ipv4host, port, database
   print(
     paste0(
-      x["name"], "://",
-      x["username"], ":", if (hide_password) "****" else x["password"], "@",
-      x["ipv4host"],
-      if (x["port"] != "") ":" else "", x["port"],
-      if (x["database"] != "") "/" else "", x["database"]
+      x[["name"]], "://",
+      x[["username"]], ":", if (hide_password) "****" else x["password"], "@",
+      x[["host"]],
+      if (x[["port"]] != "") ":" else "", x["port"],
+      if (x[["database"]] != "") "/" else "", x["database"]
     )
   )
 }
@@ -107,10 +118,34 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
 
 
 .rfc_1738_quote <- function(text) {
-  utils::URLencode(text)
+  utils::URLencode(text, reserved = TRUE)
 }
 
 
 .rfc_1738_unquote <- function(text) {
   utils::URLdecode(text)
+}
+
+# this code was copied from httr's parse_query function
+# https://github.com/r-lib/httr/blob/master/R/url-query.r
+.rfc_1738_parse_query <- function(query) {
+  query_args <- strsplit(query, "&")[[1]]
+
+  # split each argument on first occurence of =
+  # see https://stackoverflow.com/a/26247455/1144523
+  params <- regmatches(query_args, regexpr("=", query_args), invert = TRUE)
+
+  values <- vapply(
+    params,
+    function(par) .rfc_1738_unquote(par[2]),
+    FUN.VALUE = character(1)
+  )
+
+  names(values) <- vapply(
+    params,
+    function(par) .rfc_1738_unquote(par[1]),
+    FUN.VALUE = character(1)
+  )
+
+  as.list(values)
 }

@@ -13,8 +13,8 @@ driver_registry$set(
 
 #' configure default drivers for different dialects
 #' @export
-driver_defaults <- simple_config()
-driver_defaults$set(
+dialect_defaults <- simple_config()
+dialect_defaults$set(
   postgresql = "RPostgres",
   mysql = "RMariaDB",
   mariadb = "RMariaDB"
