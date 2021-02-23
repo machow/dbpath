@@ -18,3 +18,13 @@ for (ii in 1:length(DB_STRINGS)) {
     testthat::expect_s4_class(con, "DBIConnection")
   })
 }
+
+test_that("dbpath_params works with odbc", {
+  url <- dbpath("snowflake+odbc://some_user:some_password@localhost/dbname?warehouse=mywarehouse")
+  params <- dbpath_params(odbc::odbc(), url)
+
+  expect_equal(params$driver, "snowflake")
+  expect_equal(params$warehouse, "mywarehouse")
+
+  expect_is(params$drv, "OdbcDriver")
+})
