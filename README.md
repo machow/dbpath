@@ -75,10 +75,6 @@ Note that the `RMariaDB` in `mysql+RMariaDB` is optional!
 `dbpath's` approach is based on python's SQLAlchemy library.
 This means that you can use the same string across languages!
 
-```R
-sql_url = "postgresql://user:password@localhost:port/dbname"
-```
-
 <table width="100%">
   <thead>
     <tr>
@@ -87,16 +83,37 @@ sql_url = "postgresql://user:password@localhost:port/dbname"
     </tr>
   </thead>
   <tr>
+    <!-- shared code -->
+<td colspan=2>
+
+```R
+# one string to rule them all
+sql_url = "postgresql://user:password@localhost:port/dbname"
+
+```
+  
+</td>
+  </tr>
+  <tr>
     <!-- r example -->
-    <td><pre><code>library(dbpath)
+<td>
+  
+```R
+library(dbpath)
 DBI::dbconnection(sql_url)
-</code></pre>
-    </td>
+```
+
+</td>
+
     <!-- python example -->
-    <td><pre><code>import sqlalchemy
+<td>
+
+```python
+import sqlalchemy
 sqlalchemy.create_engine(sql_url)
-</code></pre>
-    </td>
+```
+
+</td>
   </tr>
 </table>
 
