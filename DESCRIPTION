@@ -19,7 +19,8 @@ Imports:
 Suggests: 
     testthat,
     RPostgres,
-    RMariaDB
+    RMariaDB,
+    odbc
 Collate: 
     'dbpath.R'
     'drivers.R'
