@@ -2,26 +2,26 @@ Package: dbpath
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Michael",
-           family = "Chow",
-           role = c("aut", "cre"),
-           email = "mc_al_github@fastmail.com")
+    person("Michael", "Chow", , "mc_al_github@fastmail.com", role = c("aut", "cre"))
 Description: A url interface for connecting to databases.
 License: MIT + file LICENSE
+Imports: 
+    DBI,
+    dplyr,
+    methods
+Suggests: 
+    odbc,
+    RMariaDB,
+    RPostgres,
+    testthat
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
-Imports: 
-    dplyr,
-    DBI,
-    methods
-Suggests: 
-    testthat,
-    RPostgres,
-    RMariaDB,
-    odbc
+RoxygenNote: 7.2.2
 Collate: 
     'dbpath.R'
+    'dbpath_build.R'
     'drivers.R'
+    'utils.R'
     'zzz.R'

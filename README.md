@@ -1,33 +1,38 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # dbpath
 
 <!-- badges: start -->
-[![R build status](https://github.com/machow/dbpath/workflows/R-CMD-check/badge.svg)](https://github.com/machow/dbpath/actions)
+
+[![R build
+status](https://github.com/machow/dbpath/workflows/R-CMD-check/badge.svg)](https://github.com/machow/dbpath/actions)
 <!-- badges: end -->
 
-dbpath is an R library for creating database connections via a single string (url).
+dbpath is an R library for creating database connections via a single
+string (url).
 
 ## Install
 
-```R
+``` r
 remotes::install_github("machow/dbpath")
 ```
 
 ## Examples
 
-```R
+``` r
 library(dbpath)
 
 sql_url <- dbpath("postgresql+RPostgres://some_user:some_password@localhost:5432")
 sql_url
+#> <dbpath>
+#> postgresql+RPostgres://some_user:****@localhost:5432
 ```
 
-```
-[1] "postgresql+RPostgres://some_user:****@localhost:5432"
-```
+You can use the `dbpath` output with either DBI::dbConnect, or
+dplyr::tbl to create a remote connection.
 
-You can use the `dbpath` output with either DBI::dbConnect, or dplyr::tbl to create a remote connection.
-
-```R
+``` r
 # get a database connection
 con <- DBI::dbConnect(sql_url)
 
@@ -40,23 +45,23 @@ tbl_mtcars
 
 `dbpath` URLs follow the format below.
 
-```
-<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>
-```
+    <dialect>+<driver>://<username>:<password>@<host>:<port>/<database>
 
-Here's an example using mysql:
+Here’s an example using mysql:
 
-```R
+``` r
 mysql_url <- "mysql+RMariaDB://root:some_password@localhost"
 ```
 
-In this case, we're connecting to the mysql dialect, using R's MariaDB package as a driver.
+In this case, we’re connecting to the mysql dialect, using R’s MariaDB
+package as a driver.
 
-The code below shows how it translates to making the connection manually.
+The code below shows how it translates to making the connection
+manually.
 
-```R
+``` r
 # dbpath
-DBI::dbConnect(mysql_url)
+DBI::dbConnect(dbpath(mysql_url))
 
 # manual
 DBI::dbConnect(
@@ -67,91 +72,84 @@ DBI::dbConnect(
   )
 ```
 
-Behind the scenes, `dbpath` uses driver hooks to know that if RMariaDB is the driver, then we need its MariaDB() object.
-Note that the `RMariaDB` in `mysql+RMariaDB` is optional!
+Behind the scenes, `dbpath` uses driver hooks to know that if RMariaDB
+is the driver, then we need its MariaDB() object. Note that the
+`RMariaDB` in `mysql+RMariaDB` is optional!
 
 ## Interoperability with Python
 
-`dbpath's` approach is based on python's SQLAlchemy library.
-This means that you can use the same string across languages!
+`dbpath's` approach is based on python’s SQLAlchemy library. This means
+that you can use the same string across languages!
 
 <table width="100%">
-  <thead>
-    <tr>
-      <th>R</th>
-      <th>python</th>
-    </tr>
-  </thead>
-  <tr>
-    <!-- shared code -->
-<td colspan=2>
+<thead>
+<tr>
+<th>
+R
+</th>
+<th>
+python
+</th>
+</tr>
+</thead>
+<tr>
+<!-- shared code -->
+<td colspan="2">
 
-```R
+``` r
 # one string to rule them all
 sql_url = "postgresql://user:password@localhost:port/dbname"
-
 ```
-  
+
 </td>
-  </tr>
-  <tr>
-    <!-- r example -->
+</tr>
+<tr>
+<!-- r example -->
 <td>
-  
-```R
+
+``` r
 library(dbpath)
-DBI::dbconnection(sql_url)
+DBI::dbconnection(dbpath(sql_url))
 ```
 
 </td>
-
-    <!-- python example -->
+<!-- python example -->
 <td>
 
-```python
+``` python
 import sqlalchemy
 sqlalchemy.create_engine(sql_url)
 ```
 
 </td>
-  </tr>
+</tr>
 </table>
-
-
 
 ## Configuring Driver Selection
 
 The code below adds a custom driver for SQLite.
 
-```R
+``` r
 library(dbpath)
 
 driver_registry$set(my_driver = function () RSQLite::SQLite)
 
 # Note the 3 slashes, rather than two, meaning no user name, password, or host
-sqlite_url <- "sqlite+my_driver:///:memory:"
+sqlite_url <- dbpath("sqlite+my_driver:///:memory:")
 
 sqlite_url
-```
+#> <dbpath>
+#> sqlite+my_driver:///:memory:
 
-```
-[1] "sqlite+my_driver://:****@/:memory:"
-```
-
-```R
 DBI::dbConnect(sqlite_url)
-```
-
-```
-<SQLiteConnection>
-  Path: :memory:
-  Extensions: TRUE
+#> <SQLiteConnection>
+#>   Path: :memory:
+#>   Extensions: TRUE
 ```
 
 ### Available Driver Hooks
 
-
-```R
+``` r
 # see available drivers
 driver_registry$get()
 
@@ -161,49 +159,63 @@ driver_defaults$get()
 
 Here are the current driver defaults:
 
-```
- postgresql       mysql     mariadb 
-"RPostgres"  "RMariaDB"  "RMariaDB" 
-```
+     postgresql       mysql     mariadb 
+    "RPostgres"  "RMariaDB"  "RMariaDB" 
 
 ## Configuring Driver Connections
 
-dbpath uses an s3 method called `dbpath_params` to get a list of parameters to pass to `DBI::dbConnect` (or `dplyr::tbl`).
+dbpath uses an s3 method called `dbpath_params` to get a list of
+parameters to pass to `DBI::dbConnect` (or `dplyr::tbl`).
 
-```R
+``` r
 url <- dbpath("postgresql://a_user:a_password@localhost/dbname")
 
 dbpath_params(url)
+#> $drv
+#> <PqDriver>
+#> 
+#> $user
+#> [1] "a_user"
+#> 
+#> $password
+#> [1] "a_password"
+#> 
+#> $host
+#> [1] "localhost"
+#> 
+#> $port
+#> [1] ""
+#> 
+#> $dbname
+#> [1] "dbname"
 ```
 
-```
-$drv
-<PqDriver>
+    $drv
+    <PqDriver>
 
-$user
-[1] "a_user"
+    $user
+    [1] "a_user"
 
-$password
-[1] "a_password"
+    $password
+    [1] "a_password"
 
-$host
-[1] "localhost"
+    $host
+    [1] "localhost"
 
-$port
-[1] ""
+    $port
+    [1] ""
 
-$dbname
-[1] "dbname"
-```
+    $dbname
+    [1] "dbname"
 
-In order to support a new driver type, you can register an s3 method for it.
-The function should return a list of parameters, whose names are the arguments
-that would be passed to DBI::dbConnect.
+In order to support a new driver type, you can register an s3 method for
+it. The function should return a list of parameters, whose names are the
+arguments that would be passed to DBI::dbConnect.
 
-```R
+``` r
 dbpath_params.PqDriver <- function(driver, url) {
   list(
-    drv = driver
+    drv = driver,
     user = url$user,
     password = url$password,
     host = url$host,
@@ -215,11 +227,32 @@ dbpath_params.PqDriver <- function(driver, url) {
 }
 ```
 
-You can get a specific drivers parameters by passing it as the first argument to `dbpath_params`:
+You can get a specific drivers parameters by passing it as the first
+argument to `dbpath_params`:
 
-```R
+``` r
 driver <- RPostgres::Postgres()
 class(driver)                        # <PqDriver>
+#> [1] "PqDriver"
+#> attr(,"package")
+#> [1] "RPostgres"
 
 dbpath_params(driver, url)
+#> $drv
+#> <PqDriver>
+#> 
+#> $user
+#> [1] "a_user"
+#> 
+#> $password
+#> [1] "a_password"
+#> 
+#> $host
+#> [1] "localhost"
+#> 
+#> $port
+#> [1] ""
+#> 
+#> $dbname
+#> [1] "dbname"
 ```

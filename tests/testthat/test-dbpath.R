@@ -6,8 +6,9 @@ test_that("dbpath works when passwords contain @", {
 })
 
 test_that("dbpath print hides passwords", {
+  expect_snapshot(dbpath("a+b://c:my_password@d"))
   expect_equal(
-    print(dbpath("a+b://c:my_password@d")),
+    format(dbpath("a+b://c:my_password@d"), hide_password = TRUE),
     "a+b://c:****@d"
   )
 })

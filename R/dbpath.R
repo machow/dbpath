@@ -1,7 +1,7 @@
 # port of # https://github.com/sqlalchemy/sqlalchemy/blob/b21a03316ff35ea86405f07d70fa1a2de7a01378/lib/sqlalchemy/engine/url.py#L716
 
 #' S4 compatible class for dbpath
-#' @rdname unique
+#' @name unique
 #' @importFrom methods setOldClass setMethod
 setOldClass("dbpath")
 
@@ -80,14 +80,31 @@ setMethod("dbConnect", "dbpath", function(drv) {
 #' @export
 print.dbpath <- function(x, hide_password = TRUE, ...) {
   # name, username, password, ipv4host, port, database
-  print(
-    paste0(
-      x[["name"]], "://",
-      x[["username"]], ":", if (hide_password) "****" else x["password"], "@",
-      x[["host"]],
-      if (x[["port"]] != "") ":" else "", x["port"],
-      if (x[["database"]] != "") "/" else "", x["database"]
-    )
+  cat("<dbpath>\n", format(x, hide_password = hide_password, ...), sep = "")
+}
+
+#' Format a dbpath object
+#'
+#' Returns a formatted dbpath URL as a character string.
+#'
+#' @param x The [dbpath()] object
+#' @inheritParams print.dbpath
+#'
+#' @return A character string consisting of a dbpath URL, e.g
+#'   `<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>`.
+#'
+#' @export
+format.dbpath <- function(x, hide_password = FALSE, ...) {
+  paste0(
+    x[["name"]], "://",
+    x[["username"]],
+    if (is_not_empty(x[["password"]]))
+      paste0(":", if (hide_password) "****" else x[["password"]]),
+    if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]])) "@",
+    x[["host"]],
+    if (is_not_empty(x[["port"]])) paste0(":", x[["port"]]),
+    if (is_not_empty(x[["database"]])) paste0("/", x[["database"]]),
+    if (!is.null(x[["params"]])) format_params(x[["params"]])
   )
 }
 
@@ -146,4 +163,21 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
   )
 
   as.list(values)
+}
+
+format_params <- function(params) {
+  # params is a named list of parameter values
+  if (!is.list(params) || is.null(names(params))) {
+    stop("`params` must be a named list of parameter name-value pairs.")
+  }
+  if (any(!nzchar(names(params)))) {
+    stop("All items in `params` must have a name.")
+  }
+
+  params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
+    sprintf("%s=%s", name, params[[name]])
+  })
+
+  params <- paste(params, collapse = "&")
+  paste0("?", params)
 }
