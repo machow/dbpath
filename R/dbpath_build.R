@@ -29,6 +29,15 @@ dbpath_build <- function(
   database = NULL,
   params = NULL
 ) {
+  # This function builds a single URL string following the dbpath format:
+  #
+  # <dialect>+<driver>://<username>:<password>@<host>:<port>/<database>?<params>
+  #
+  # It then hands it to dbpath() where it's parsed into a dbpath object. That's
+  # a bit circular, but it ensures that dbpath() and its parsing helpers remain
+  # the source of truth for the URL format and that we don't accidentally cut
+  # the wrong corners if we were to jump straight to a dbpath object.
+
   assert_is_string(dialect)
   url <- dialect
 
