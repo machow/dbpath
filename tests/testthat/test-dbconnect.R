@@ -13,20 +13,28 @@ for (ii in 1:length(DB_STRINGS)) {
   conn_str <- DB_STRINGS[ii]
 
   test_that(paste0("database connection works: ", name), {
+    if (name == "postgres") {
+      skip_if_not_installed("RPostgres")
+    } else {
+      skip_if_not_installed("RMariaDB")
+    }
+
     con <- DBI::dbConnect(dbpath(conn_str))
     DBI::dbDisconnect(con)
-    testthat::expect_s4_class(con, "DBIConnection")
+    expect_s4_class(con, "DBIConnection")
   })
 }
 
 test_that("dbpath_params works with odbc", {
+  skip_if_not_installed("odbc")
+
   url <- dbpath("snowflake+odbc://some_user:some_password@localhost/dbname?warehouse=mywarehouse")
   params <- dbpath_params(odbc::odbc(), url)
 
   expect_equal(params$driver, "snowflake")
   expect_equal(params$warehouse, "mywarehouse")
 
-  expect_is(params$drv, "OdbcDriver")
+  expect_s4_class(params$drv, "OdbcDriver")
 
   params2 <- dbpath_params(url)
   expect_equal(params, params2)

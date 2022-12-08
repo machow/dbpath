@@ -22,7 +22,8 @@ sql_url
 ```
 
 ```
-[1] "postgresql+RPostgres://some_user:****@localhost:5432"
+<dbpath>
+postgresql+RPostgres://some_user:****@localhost:5432
 ```
 
 You can use the `dbpath` output with either DBI::dbConnect, or dplyr::tbl to create a remote connection.
@@ -129,13 +130,14 @@ library(dbpath)
 driver_registry$set(my_driver = function () RSQLite::SQLite)
 
 # Note the 3 slashes, rather than two, meaning no user name, password, or host
-sqlite_url <- "sqlite+my_driver:///:memory:"
+sqlite_url <- dbpath("sqlite+my_driver:///:memory:")
 
 sqlite_url
 ```
 
 ```
-[1] "sqlite+my_driver://:****@/:memory:"
+<dbpath>
+sqlite+my_driver:///:memory:
 ```
 
 ```R
