@@ -24,7 +24,6 @@ jobs:
         with:
           cache-version: 2
           extra-packages: |
-            any::ggplot2
             any::rcmdcheck
       - name: Setup databases
         run: docker-compose up -d
