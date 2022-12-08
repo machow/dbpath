@@ -89,6 +89,7 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
 #'
 #' @param x The [dbpath()] object
 #' @inheritParams print.dbpath
+#'
 #' @return A character string consisting of a dbpath URL, e.g
 #'   `<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>`.
 #'
