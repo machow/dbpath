@@ -16,6 +16,7 @@ driver_registry$set(
 #' @export
 dialect_defaults <- simple_config()
 dialect_defaults$set(
+  postgres = "RPostgres",
   postgresql = "RPostgres",
   mysql = "RMariaDB",
   mariadb = "RMariaDB",
