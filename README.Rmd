@@ -148,12 +148,6 @@ sqlite_url
 DBI::dbConnect(sqlite_url)
 ```
 
-```
-<SQLiteConnection>
-  Path: :memory:
-  Extensions: TRUE
-```
-
 ### Available Driver Hooks
 
 

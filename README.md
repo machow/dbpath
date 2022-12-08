@@ -147,10 +147,6 @@ DBI::dbConnect(sqlite_url)
 #>   Extensions: TRUE
 ```
 
-    <SQLiteConnection>
-      Path: :memory:
-      Extensions: TRUE
-
 ### Available Driver Hooks
 
 ``` r
