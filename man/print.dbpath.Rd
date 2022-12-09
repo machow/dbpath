@@ -4,7 +4,7 @@
 \alias{print.dbpath}
 \title{Print a dbpath object}
 \usage{
-\method{print}{dbpath}(x, hide_password = TRUE, ..., url_encode = FALSE)
+\method{print}{dbpath}(x, hide_password = TRUE, ...)
 }
 \arguments{
 \item{x}{A \code{\link[=dbpath]{dbpath()}} object to print}
@@ -14,9 +14,6 @@ hidden by default when printing a \code{\link[=dbpath]{dbpath()}} object, but ar
 using \code{format()} to construct a URL.}
 
 \item{...}{extra arguments}
-
-\item{url_encode}{If \link{TRUE}, the password and query paraemeters are
-URL-encoded. Turned on by default in \code{format()}.}
 }
 \description{
 Print a dbpath object

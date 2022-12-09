@@ -12,15 +12,7 @@
       print(dbpath(url_pwd), hide_password = FALSE)
     Output
       <dbpath>
-      drv://user:p@ssw*rd@host
-
----
-
-    Code
-      print(dbpath(url_pwd), hide_password = FALSE, url_encode = FALSE)
-    Output
-      <dbpath>
-      drv://user:p@ssw*rd@host
+      drv://user:p%40ssw%2Ard@host
 
 # dbpath url-decodes and encodes query parameters
 
@@ -28,13 +20,5 @@
       print(dbpath(url_q))
     Output
       <dbpath>
-      drv://user@host/db?foo=bar and baz
-
----
-
-    Code
-      print(dbpath(url_q), url_encode = FALSE)
-    Output
-      <dbpath>
-      drv://user@host/db?foo=bar and baz
+      drv://user@host/db?foo=bar%20and%20baz
 

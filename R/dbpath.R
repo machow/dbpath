@@ -83,14 +83,12 @@ setMethod("dbConnect", "dbpath", function(drv) {
 #' @param hide_password Replace password with '****' if [TRUE]. Passwords are
 #'   hidden by default when printing a [dbpath()] object, but are revealed when
 #'   using `format()` to construct a URL.
-#' @param url_encode If [TRUE], the password and query paraemeters are
-#'   URL-encoded. Turned on by default in `format()`.
 #' @param ... extra arguments
 #'
 #' @export
-print.dbpath <- function(x, hide_password = TRUE, ..., url_encode = FALSE) {
+print.dbpath <- function(x, hide_password = TRUE, ...) {
   # name, username, password, ipv4host, port, database
-  url <- format(x, hide_password = hide_password, ..., url_encode = url_encode)
+  url <- format(x, hide_password = hide_password, ...)
   cat("<dbpath>\n", url, sep = "")
 }
 
@@ -105,14 +103,13 @@ print.dbpath <- function(x, hide_password = TRUE, ..., url_encode = FALSE) {
 #'   `<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>`.
 #'
 #' @export
-format.dbpath <- function(x, hide_password = FALSE, ..., url_encode = TRUE) {
+format.dbpath <- function(x, hide_password = FALSE, ...) {
   password <- function() {
     if (!is_not_empty(x[["password"]])) return("")
     if (hide_password) return(":****")
-    if (url_encode) {
-      x[["password"]] <- utils::URLencode(x[["password"]], reserved = TRUE)
-    }
-    paste0(":", x[["password"]])
+
+    pwd <- utils::URLencode(x[["password"]], reserved = TRUE)
+    paste0(":", pwd)
   }
 
   paste0(
@@ -127,7 +124,7 @@ format.dbpath <- function(x, hide_password = FALSE, ..., url_encode = TRUE) {
     if (is_not_empty(x[["database"]]))
       paste0("/", x[["database"]]),
     if (!is.null(x[["params"]]))
-      format_params(x[["params"]], url_encode = url_encode)
+      format_params(x[["params"]])
   )
 }
 
@@ -188,13 +185,7 @@ format.dbpath <- function(x, hide_password = FALSE, ..., url_encode = TRUE) {
   as.list(values)
 }
 
-format_params <- function(params, url_encode = TRUE) {
-  encoder <- if (!url_encode) {
-    identity
-  } else {
-    function(x) utils::URLencode(x, reserved = TRUE)
-  }
-
+format_params <- function(params) {
   # params is a named list of parameter values
   if (!is.list(params) || is.null(names(params))) {
     stop("`params` must be a named list of parameter name-value pairs.")
@@ -204,7 +195,7 @@ format_params <- function(params, url_encode = TRUE) {
   }
 
   params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
-    sprintf("%s=%s", name, encoder(params[[name]]))
+    sprintf("%s=%s", name, utils::URLencode(params[[name]], reserved = TRUE))
   })
 
   params <- paste(params, collapse = "&")

@@ -28,12 +28,9 @@ test_that("dbpath url-decodes and encodes passwords", {
     url_pwd
   )
 
-  # encoded in the print method or not if requested
+  # encoded in the print method
   expect_snapshot(
     print(dbpath(url_pwd), hide_password = FALSE)
-  )
-  expect_snapshot(
-    print(dbpath(url_pwd), hide_password = FALSE, url_encode = FALSE)
   )
 })
 
@@ -52,11 +49,8 @@ test_that("dbpath url-decodes and encodes query parameters", {
     url_q
   )
 
-  # encoded in the print method or not if requested
+  # encoded in the print method
   expect_snapshot(
     print(dbpath(url_q))
-  )
-  expect_snapshot(
-    print(dbpath(url_q), url_encode = FALSE)
   )
 })
