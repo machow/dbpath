@@ -40,7 +40,12 @@ dbpath <- function(url) {
 
     if (length(tokens) > 1) {
       parsed_url[["params"]] <- .rfc_1738_parse_query(tokens[2])
+      parsed_url[["params"]] <- lapply(parsed_url[["params"]], utils::URLdecode)
     }
+  }
+
+  if (nzchar(parsed_url[["password"]])) {
+    parsed_url[["password"]] <- utils::URLdecode(parsed_url[["password"]])
   }
 
   structure(parsed_url, class = "dbpath")
