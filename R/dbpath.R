@@ -44,6 +44,9 @@ dbpath <- function(url) {
     }
   }
 
+  if (nzchar(parsed_url[["username"]])) {
+    parsed_url[["username"]] <- utils::URLdecode(parsed_url[["username"]])
+  }
   if (nzchar(parsed_url[["password"]])) {
     parsed_url[["password"]] <- utils::URLdecode(parsed_url[["password"]])
   }
@@ -114,7 +117,7 @@ format.dbpath <- function(x, hide_password = FALSE, ...) {
 
   paste0(
     x[["name"]], "://",
-    x[["username"]],
+    url_encode(x[["username"]]),
     password(),
     if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]]))
       "@",

@@ -6,13 +6,13 @@
       <dbpath>
       a+b://c:****@d
 
-# dbpath url-decodes and encodes passwords
+# dbpath url-decodes and encodes usernname and password
 
     Code
-      print(dbpath(url_pwd), hide_password = FALSE)
+      print(dbpath(url_user_pass), hide_password = FALSE)
     Output
       <dbpath>
-      drv://user:p%40ssw%2Ard@host
+      drv://%24%40lly:p%40ssw%2Ard@host
 
 # dbpath url-decodes and encodes query parameters
 

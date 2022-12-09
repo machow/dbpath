@@ -50,7 +50,7 @@ dbpath_build <- function(
 
   if (!is.null(username)) {
     assert_is_string(username)
-    url <- paste0(url, username)
+    url <- paste0(url, url_encode(username))
   }
 
   if (!is.null(password)) {
