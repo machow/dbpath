@@ -108,7 +108,7 @@ format.dbpath <- function(x, hide_password = FALSE, ...) {
     if (!is_not_empty(x[["password"]])) return("")
     if (hide_password) return(":****")
 
-    pwd <- utils::URLencode(x[["password"]], reserved = TRUE)
+    pwd <- url_encode(x[["password"]])
     paste0(":", pwd)
   }
 
@@ -195,7 +195,7 @@ format_params <- function(params) {
   }
 
   params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
-    sprintf("%s=%s", name, utils::URLencode(params[[name]], reserved = TRUE))
+    sprintf("%s=%s", name, url_encode(params[[name]]))
   })
 
   params <- paste(params, collapse = "&")

@@ -123,10 +123,10 @@ test_that("dbpath_build() url-encodes passwords and query params", {
       dbpath_build(
         "drv",
         username = "user",
-        password = utils::URLencode("p@ssw*rd", reserved = TRUE),
+        password = url_encode("p@ssw*rd"),
         host = "host",
         database = "db",
-        params = list(foo = utils::URLencode("bar and baz", reserved = TRUE))
+        params = list(foo = url_encode("bar and baz"))
       )
     ),
     url_exp

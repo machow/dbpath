@@ -55,7 +55,7 @@ dbpath_build <- function(
 
   if (!is.null(password)) {
     assert_is_string(password)
-    url <- paste0(url, ":", utils::URLencode(password, reserved = TRUE))
+    url <- paste0(url, ":", url_encode(password))
   }
 
   url <- paste0(url, "@")
