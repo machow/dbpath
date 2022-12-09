@@ -12,3 +12,51 @@ test_that("dbpath print hides passwords", {
     "a+b://c:****@d"
   )
 })
+
+test_that("dbpath url-decodes and encodes passwords", {
+  url_pwd <- "drv://user:p%40ssw%2Ard@host"
+
+  # decoded on ingest
+  expect_equal(
+    dbpath(url_pwd)$password,
+    "p@ssw*rd"
+  )
+
+  # re-encoded when forming a URL
+  expect_equal(
+    format(dbpath(url_pwd)),
+    url_pwd
+  )
+
+  # encoded in the print method or not if requested
+  expect_snapshot(
+    print(dbpath(url_pwd), hide_password = FALSE)
+  )
+  expect_snapshot(
+    print(dbpath(url_pwd), hide_password = FALSE, url_encode = FALSE)
+  )
+})
+
+test_that("dbpath url-decodes and encodes query parameters", {
+  url_q <- "drv://user@host/db?foo=bar%20and%20baz"
+
+  # decoded on ingest
+  expect_equal(
+    dbpath(url_q)$params$foo,
+    "bar and baz"
+  )
+
+  # re-encoded when forming a URL
+  expect_equal(
+    format(dbpath(url_q)),
+    url_q
+  )
+
+  # encoded in the print method or not if requested
+  expect_snapshot(
+    print(dbpath(url_q))
+  )
+  expect_snapshot(
+    print(dbpath(url_q), url_encode = FALSE)
+  )
+})
