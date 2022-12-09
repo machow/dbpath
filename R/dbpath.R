@@ -40,7 +40,15 @@ dbpath <- function(url) {
 
     if (length(tokens) > 1) {
       parsed_url[["params"]] <- .rfc_1738_parse_query(tokens[2])
+      parsed_url[["params"]] <- lapply(parsed_url[["params"]], utils::URLdecode)
     }
+  }
+
+  if (nzchar(parsed_url[["username"]])) {
+    parsed_url[["username"]] <- utils::URLdecode(parsed_url[["username"]])
+  }
+  if (nzchar(parsed_url[["password"]])) {
+    parsed_url[["password"]] <- utils::URLdecode(parsed_url[["password"]])
   }
 
   structure(parsed_url, class = "dbpath")
@@ -72,22 +80,26 @@ setMethod("dbConnect", "dbpath", function(drv) {
   do.call(DBI::dbConnect, params)
 })
 
-#' print a dbpath object
-#' @method print dbpath
-#' @param x an item to print
-#' @param hide_password replace password with '****'
+#' Print a dbpath object
+#'
+#' @param x A [dbpath()] object to print
+#' @param hide_password Replace password with '****' if [TRUE]. Passwords are
+#'   hidden by default when printing a [dbpath()] object, but are revealed when
+#'   using `format()` to construct a URL.
 #' @param ... extra arguments
+#'
 #' @export
 print.dbpath <- function(x, hide_password = TRUE, ...) {
   # name, username, password, ipv4host, port, database
-  cat("<dbpath>\n", format(x, hide_password = hide_password, ...), sep = "")
+  url <- format(x, hide_password = hide_password, ...)
+  cat("<dbpath>\n", url, sep = "")
 }
 
 #' Format a dbpath object
 #'
 #' Returns a formatted dbpath URL as a character string.
 #'
-#' @param x The [dbpath()] object
+#' @param x A [dbpath()] object to format
 #' @inheritParams print.dbpath
 #'
 #' @return A character string consisting of a dbpath URL, e.g
@@ -95,16 +107,27 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
 #'
 #' @export
 format.dbpath <- function(x, hide_password = FALSE, ...) {
+  password <- function() {
+    if (!is_not_empty(x[["password"]])) return("")
+    if (hide_password) return(":****")
+
+    pwd <- url_encode(x[["password"]])
+    paste0(":", pwd)
+  }
+
   paste0(
     x[["name"]], "://",
-    x[["username"]],
-    if (is_not_empty(x[["password"]]))
-      paste0(":", if (hide_password) "****" else x[["password"]]),
-    if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]])) "@",
+    url_encode(x[["username"]]),
+    password(),
+    if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]]))
+      "@",
     x[["host"]],
-    if (is_not_empty(x[["port"]])) paste0(":", x[["port"]]),
-    if (is_not_empty(x[["database"]])) paste0("/", x[["database"]]),
-    if (!is.null(x[["params"]])) format_params(x[["params"]])
+    if (is_not_empty(x[["port"]]))
+      paste0(":", x[["port"]]),
+    if (is_not_empty(x[["database"]]))
+      paste0("/", x[["database"]]),
+    if (!is.null(x[["params"]]))
+      format_params(x[["params"]])
   )
 }
 
@@ -175,7 +198,7 @@ format_params <- function(params) {
   }
 
   params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
-    sprintf("%s=%s", name, params[[name]])
+    sprintf("%s=%s", name, url_encode(params[[name]]))
   })
 
   params <- paste(params, collapse = "&")

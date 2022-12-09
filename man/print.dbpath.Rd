@@ -2,17 +2,19 @@
 % Please edit documentation in R/dbpath.R
 \name{print.dbpath}
 \alias{print.dbpath}
-\title{print a dbpath object}
+\title{Print a dbpath object}
 \usage{
 \method{print}{dbpath}(x, hide_password = TRUE, ...)
 }
 \arguments{
-\item{x}{an item to print}
+\item{x}{A \code{\link[=dbpath]{dbpath()}} object to print}
 
-\item{hide_password}{replace password with '****'}
+\item{hide_password}{Replace password with '****' if \link{TRUE}. Passwords are
+hidden by default when printing a \code{\link[=dbpath]{dbpath()}} object, but are revealed when
+using \code{format()} to construct a URL.}
 
 \item{...}{extra arguments}
 }
 \description{
-print a dbpath object
+Print a dbpath object
 }

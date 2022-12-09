@@ -11,3 +11,8 @@ is_not_empty <- function(x) {
   if (is.character(x) && !any(nzchar(x))) return(FALSE)
   TRUE
 }
+
+url_encode <- function(x) {
+  if (is.null(x)) return("")
+  utils::URLencode(x, reserved = TRUE)
+}
