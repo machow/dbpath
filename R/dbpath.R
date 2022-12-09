@@ -175,7 +175,7 @@ format_params <- function(params) {
   }
 
   params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
-    sprintf("%s=%s", name, params[[name]])
+    sprintf("%s=%s", name, utils::URLencode(params[[name]]))
   })
 
   params <- paste(params, collapse = "&")
