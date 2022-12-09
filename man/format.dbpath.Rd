@@ -4,7 +4,7 @@
 \alias{format.dbpath}
 \title{Format a dbpath object}
 \usage{
-\method{format}{dbpath}(x, hide_password = FALSE, ...)
+\method{format}{dbpath}(x, hide_password = FALSE, ..., url_encode = TRUE)
 }
 \arguments{
 \item{x}{The \code{\link[=dbpath]{dbpath()}} object}
@@ -12,6 +12,9 @@
 \item{hide_password}{replace password with '****'}
 
 \item{...}{extra arguments}
+
+\item{url_encode}{If \link{TRUE}, the password and query paraemeters are
+URL-encoded. Turned on by default in \code{format()}.}
 }
 \value{
 A character string consisting of a dbpath URL, e.g

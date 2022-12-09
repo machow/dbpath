@@ -77,15 +77,19 @@ setMethod("dbConnect", "dbpath", function(drv) {
   do.call(DBI::dbConnect, params)
 })
 
-#' print a dbpath object
-#' @method print dbpath
-#' @param x an item to print
+#' Print a dbpath object
+#'
+#' @param x A dbpath object to print
 #' @param hide_password replace password with '****'
+#' @param url_encode If [TRUE], the password and query paraemeters are
+#'   URL-encoded. Turned on by default in `format()`.
 #' @param ... extra arguments
+#'
 #' @export
-print.dbpath <- function(x, hide_password = TRUE, ...) {
+print.dbpath <- function(x, hide_password = TRUE, ..., url_encode = FALSE) {
   # name, username, password, ipv4host, port, database
-  cat("<dbpath>\n", format(x, hide_password = hide_password, ...), sep = "")
+  url <- format(x, hide_password = hide_password, ..., url_encode = url_encode)
+  cat("<dbpath>\n", url, sep = "")
 }
 
 #' Format a dbpath object
@@ -99,17 +103,29 @@ print.dbpath <- function(x, hide_password = TRUE, ...) {
 #'   `<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>`.
 #'
 #' @export
-format.dbpath <- function(x, hide_password = FALSE, ...) {
+format.dbpath <- function(x, hide_password = FALSE, ..., url_encode = TRUE) {
+  password <- function() {
+    if (!is_not_empty(x[["password"]])) return("")
+    if (hide_password) return(":****")
+    if (url_encode) {
+      x[["password"]] <- utils::URLencode(x[["password"]], reserved = TRUE)
+    }
+    paste0(":", x[["password"]])
+  }
+
   paste0(
     x[["name"]], "://",
     x[["username"]],
-    if (is_not_empty(x[["password"]]))
-      paste0(":", if (hide_password) "****" else x[["password"]]),
-    if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]])) "@",
+    password(),
+    if (is_not_empty(x[["username"]]) || is_not_empty(x[["password"]]))
+      "@",
     x[["host"]],
-    if (is_not_empty(x[["port"]])) paste0(":", x[["port"]]),
-    if (is_not_empty(x[["database"]])) paste0("/", x[["database"]]),
-    if (!is.null(x[["params"]])) format_params(x[["params"]])
+    if (is_not_empty(x[["port"]]))
+      paste0(":", x[["port"]]),
+    if (is_not_empty(x[["database"]]))
+      paste0("/", x[["database"]]),
+    if (!is.null(x[["params"]]))
+      format_params(x[["params"]], url_encode = url_encode)
   )
 }
 

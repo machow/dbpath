@@ -2,17 +2,20 @@
 % Please edit documentation in R/dbpath.R
 \name{print.dbpath}
 \alias{print.dbpath}
-\title{print a dbpath object}
+\title{Print a dbpath object}
 \usage{
-\method{print}{dbpath}(x, hide_password = TRUE, ...)
+\method{print}{dbpath}(x, hide_password = TRUE, ..., url_encode = FALSE)
 }
 \arguments{
-\item{x}{an item to print}
+\item{x}{A dbpath object to print}
 
 \item{hide_password}{replace password with '****'}
 
 \item{...}{extra arguments}
+
+\item{url_encode}{If \link{TRUE}, the password and query paraemeters are
+URL-encoded. Turned on by default in \code{format()}.}
 }
 \description{
-print a dbpath object
+Print a dbpath object
 }
