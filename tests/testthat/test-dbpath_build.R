@@ -100,3 +100,35 @@ test_that("dbpath_build() throws errors on bad input", {
     dbpath_build("driver", params = c("foo", "bar"))
   )
 })
+
+test_that("dbpath_build() url-encodes passwords and query params", {
+  url_exp <- "drv://user:p%40ssw%2Ard@host/db?foo=bar%20and%20baz"
+  expect_equal(
+    format(
+      dbpath_build(
+        "drv",
+        username = "user",
+        password = "p@ssw*rd",
+        host = "host",
+        database = "db",
+        params = list(foo = "bar and baz")
+      )
+    ),
+    url_exp
+  )
+
+  # it also doesn't re-encode previously encoded values
+  expect_equal(
+    format(
+      dbpath_build(
+        "drv",
+        username = "user",
+        password = utils::URLencode("p@ssw*rd", reserved = TRUE),
+        host = "host",
+        database = "db",
+        params = list(foo = utils::URLencode("bar and baz", reserved = TRUE))
+      )
+    ),
+    url_exp
+  )
+})
