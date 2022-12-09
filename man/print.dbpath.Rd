@@ -7,9 +7,11 @@
 \method{print}{dbpath}(x, hide_password = TRUE, ..., url_encode = FALSE)
 }
 \arguments{
-\item{x}{A dbpath object to print}
+\item{x}{A \code{\link[=dbpath]{dbpath()}} object to print}
 
-\item{hide_password}{replace password with '****'}
+\item{hide_password}{Replace password with '****' if \link{TRUE}. Passwords are
+hidden by default when printing a \code{\link[=dbpath]{dbpath()}} object, but are revealed when
+using \code{format()} to construct a URL.}
 
 \item{...}{extra arguments}
 

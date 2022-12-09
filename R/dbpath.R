@@ -79,8 +79,10 @@ setMethod("dbConnect", "dbpath", function(drv) {
 
 #' Print a dbpath object
 #'
-#' @param x A dbpath object to print
-#' @param hide_password replace password with '****'
+#' @param x A [dbpath()] object to print
+#' @param hide_password Replace password with '****' if [TRUE]. Passwords are
+#'   hidden by default when printing a [dbpath()] object, but are revealed when
+#'   using `format()` to construct a URL.
 #' @param url_encode If [TRUE], the password and query paraemeters are
 #'   URL-encoded. Turned on by default in `format()`.
 #' @param ... extra arguments
@@ -96,7 +98,7 @@ print.dbpath <- function(x, hide_password = TRUE, ..., url_encode = FALSE) {
 #'
 #' Returns a formatted dbpath URL as a character string.
 #'
-#' @param x The [dbpath()] object
+#' @param x A [dbpath()] object to format
 #' @inheritParams print.dbpath
 #'
 #' @return A character string consisting of a dbpath URL, e.g
