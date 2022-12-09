@@ -170,7 +170,13 @@ format.dbpath <- function(x, hide_password = FALSE, ...) {
   as.list(values)
 }
 
-format_params <- function(params) {
+format_params <- function(params, url_encode = TRUE) {
+  encoder <- if (!url_encode) {
+    identity
+  } else {
+    function(x) utils::URLencode(x, reserved = TRUE)
+  }
+
   # params is a named list of parameter values
   if (!is.list(params) || is.null(names(params))) {
     stop("`params` must be a named list of parameter name-value pairs.")
@@ -180,7 +186,7 @@ format_params <- function(params) {
   }
 
   params <- vapply(names(params), FUN.VALUE = character(1), function(name) {
-    sprintf("%s=%s", name, utils::URLencode(params[[name]]))
+    sprintf("%s=%s", name, encoder(params[[name]]))
   })
 
   params <- paste(params, collapse = "&")
