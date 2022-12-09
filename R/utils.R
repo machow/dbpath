@@ -13,5 +13,6 @@ is_not_empty <- function(x) {
 }
 
 url_encode <- function(x) {
+  if (is.null(x)) return("")
   utils::URLencode(x, reserved = TRUE)
 }
