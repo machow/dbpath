@@ -9,6 +9,7 @@ Imports:
     DBI,
     dplyr,
     methods,
+    rlang,
     utils
 Suggests: 
     odbc,
