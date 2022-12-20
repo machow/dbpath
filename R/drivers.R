@@ -12,9 +12,14 @@ simple_config <- function() {
 }
 
 import_from <- function(pkg, func_name) {
-  # standard eval for pkg::func_name
-  requireNamespace(pkg)
-  function() get(func_name, loadNamespace(pkg))
+  function() {
+    # standard eval for pkg::func_name, but delayed
+    rlang::check_installed(
+      pkg = pkg,
+      reason = sprintf("to connect to the database with `%s()`.", func_name)
+    )
+    asNamespace(pkg)[[func_name]]
+  }
 }
 
 get_dialect_name <- function(path) {
